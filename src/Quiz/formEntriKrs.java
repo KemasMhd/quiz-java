@@ -1,0 +1,400 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package Quiz;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+/**
+ *
+ * @author Lenovo
+ */
+public class formEntriKrs extends javax.swing.JFrame {
+    String driver = "com.mysql.cj.jdbc.Driver";
+    String db = "jdbc:mysql://localhost/akademik22081012";
+    String user = "root";
+    String password = "";
+    DefaultTableModel model = new DefaultTableModel();
+    /**
+     * Creates new form formEntriKrs
+     */
+    public formEntriKrs() {
+        initComponents();
+    }
+    
+    void entriData(int kode_krs, String nim, String kode_matkul){
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(db, user, password);
+            Statement stmt = con.createStatement();
+            String query = "INSERT INTO krs(kode_krs, nim, kode_matakuliah) VALUES"+"('"+kode_krs+"','"+nim+"','"+kode_matkul+"')";
+            stmt.executeUpdate(query);
+            con.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }
+    
+    int getJumlahData(ResultSet x){
+        int n = 0;
+        try{
+            x.last();
+            n = x.getRow();
+            x.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+        return n;
+    }
+    
+    void tampilData(){
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(db, user, password);
+            Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            
+            String query = "SELECT * FROM krs";
+            ResultSet rs = stmt.executeQuery(query);
+            
+            int jumbaris = getJumlahData(rs);
+            String[]titleKolom = {"Kode Krs", "NIM", "Kode Matakuliah"};
+            String[][]datakrs = new String [jumbaris][3];
+            int index = 0;
+            
+            rs = stmt.executeQuery(query);
+            while(rs.next()){
+                datakrs[index][0] = rs.getString("kode_krs");
+                datakrs[index][1] = rs.getString("nim");
+                datakrs[index][2] = rs.getString("kode_matakuliah");
+                index++;
+            }
+            model.setDataVector(datakrs, titleKolom);
+            tabelKRS22081012.setModel(model);
+            rs.close();
+            con.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }
+    
+    void cariData(int kode_krs){
+        try {
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(db, user, password);
+            Statement stmt = con.createStatement();
+            String query = "SELECT * FROM krs where kode_krs='"+kode_krs+"'";
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()){
+                txtKodeKrs22081012.setText(rs.getString("kode_krs"));
+                txtNIM22081012.setText(rs.getString("nim"));
+                txtKodeMatakuliah22081012.setText(rs.getString("kode_matakuliah"));
+            }
+            rs.close();
+            con.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }
+    
+    void ubahData(int kode_krs, String nim, String kode_matkul){
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(db, user, password);
+            Statement stmt = con.createStatement();
+            String query = "UPDATE krs set nim='"+nim+"',kode_matakuliah='"+kode_matkul+"'WHERE kode_krs='"+kode_krs+"'";
+            stmt.executeUpdate(query);
+            con.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }
+    
+    void hapusData(int kode_krs){
+        try{
+            Class.forName(driver);
+            Connection con = DriverManager.getConnection(db, user, password);
+            Statement stmt = con.createStatement();
+            String query = "DELETE FROM krs WHERE kode_krs='"+kode_krs+"'";
+            stmt.executeUpdate(query);
+            
+//            rs.close();
+            con.close();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtNIM22081012 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        txtKodeMatakuliah22081012 = new javax.swing.JTextField();
+        tombolSimpan22081012 = new javax.swing.JButton();
+        tombolHapus22081012 = new javax.swing.JButton();
+        tombolUbah22081012 = new javax.swing.JButton();
+        tombolTampil22081012 = new javax.swing.JButton();
+        tombolCari22081012 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        txtKodeKrs22081012 = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelKRS22081012 = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel1.setText("FORM ENTRI KRS");
+
+        jLabel2.setText("NIM");
+
+        jLabel3.setText("Kode Matakuliah");
+
+        tombolSimpan22081012.setText("SIMPAN");
+        tombolSimpan22081012.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolSimpan22081012ActionPerformed(evt);
+            }
+        });
+
+        tombolHapus22081012.setText("HAPUS");
+        tombolHapus22081012.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolHapus22081012ActionPerformed(evt);
+            }
+        });
+
+        tombolUbah22081012.setText("UBAH");
+        tombolUbah22081012.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolUbah22081012ActionPerformed(evt);
+            }
+        });
+
+        tombolTampil22081012.setText("TAMPIL");
+        tombolTampil22081012.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolTampil22081012ActionPerformed(evt);
+            }
+        });
+
+        tombolCari22081012.setText("CARI");
+        tombolCari22081012.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tombolCari22081012ActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Kode Krs");
+
+        tabelKRS22081012.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Kode Krs", "NIM", "Kode Matakuliah"
+            }
+        ));
+        jScrollPane1.setViewportView(tabelKRS22081012);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(tombolSimpan22081012)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tombolHapus22081012)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tombolUbah22081012)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tombolTampil22081012)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tombolCari22081012)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtKodeMatakuliah22081012, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(107, 107, 107)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNIM22081012, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(67, 67, 67)
+                                        .addComponent(jLabel1))))
+                            .addComponent(txtKodeKrs22081012, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(19, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtKodeKrs22081012, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNIM22081012, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(txtKodeMatakuliah22081012, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tombolSimpan22081012)
+                    .addComponent(tombolHapus22081012)
+                    .addComponent(tombolUbah22081012)
+                    .addComponent(tombolTampil22081012)
+                    .addComponent(tombolCari22081012))
+                .addGap(31, 31, 31)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(50, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tombolSimpan22081012ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tombolSimpan22081012ActionPerformed
+        // TODO add your handling code here:
+        try{
+            int kode_krs = Integer.parseInt(txtKodeKrs22081012.getText());
+            String nim = txtNIM22081012.getText();
+            String kode_matkul = txtKodeMatakuliah22081012.getText();
+            entriData(kode_krs, nim, kode_matkul);
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_tombolSimpan22081012ActionPerformed
+
+    private void tombolTampil22081012ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tombolTampil22081012ActionPerformed
+        // TODO add your handling code here:
+        try{
+            tampilData();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_tombolTampil22081012ActionPerformed
+
+    private void tombolCari22081012ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tombolCari22081012ActionPerformed
+        // TODO add your handling code here:
+        try{
+            if(!txtKodeKrs22081012.getText().isEmpty()){
+                int kode_krs= Integer.parseInt(txtKodeKrs22081012.getText());
+                cariData(kode_krs);
+            } else{
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "silahkan masukkan kode krs yang ingin dicari!");
+            }
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_tombolCari22081012ActionPerformed
+
+    private void tombolUbah22081012ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tombolUbah22081012ActionPerformed
+        // TODO add your handling code here:
+        try{
+            int kode_krs = Integer.parseInt(txtKodeKrs22081012.getText());
+            String nim = txtNIM22081012.getText();
+            String kode_matkul = txtKodeMatakuliah22081012.getText();
+            
+            ubahData(kode_krs, nim, kode_matkul);
+            tampilData();
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_tombolUbah22081012ActionPerformed
+
+    private void tombolHapus22081012ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tombolHapus22081012ActionPerformed
+        // TODO add your handling code here:
+        try{
+            if(!txtKodeKrs22081012.getText().isEmpty()){
+            int kode_krs = Integer.parseInt(txtKodeKrs22081012.getText());
+            hapusData(kode_krs);
+            } else{
+                javax.swing.JOptionPane.showMessageDialog(rootPane, "silahkan masukkan kode krs yang ingin dihapus!");
+            }
+        }catch(Exception ex){
+            javax.swing.JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+        }
+    }//GEN-LAST:event_tombolHapus22081012ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(formEntriKrs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(formEntriKrs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(formEntriKrs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(formEntriKrs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new formEntriKrs().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabelKRS22081012;
+    private javax.swing.JButton tombolCari22081012;
+    private javax.swing.JButton tombolHapus22081012;
+    private javax.swing.JButton tombolSimpan22081012;
+    private javax.swing.JButton tombolTampil22081012;
+    private javax.swing.JButton tombolUbah22081012;
+    private javax.swing.JTextField txtKodeKrs22081012;
+    private javax.swing.JTextField txtKodeMatakuliah22081012;
+    private javax.swing.JTextField txtNIM22081012;
+    // End of variables declaration//GEN-END:variables
+}
